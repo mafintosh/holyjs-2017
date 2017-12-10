@@ -2,4 +2,5 @@
 
 My presentation at HolyJS 2017 about hyperdb
 
-See index.html for more
+See https://mafintosh.github.io/holyjs-2017 for more
+
