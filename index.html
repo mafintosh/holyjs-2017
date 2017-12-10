@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+  <title>HyperDB</title>
+  <link href='big.css' rel='stylesheet' type='text/css' />
+  <link href='highlight.css' rel='stylesheet' type='text/css' />
+  <style>
+    .new-shiny { background: #aaaaaa; }
+    .fonts { font-size: 150px; } 
+    .fonts-sm { font-size: 100px; } 
+    .face { position: absolute; }
+    .face {
+      animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both infinite;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+
+    @keyframes shake {
+      10%, 90% {
+        transform: translate3d(-2px, 0, 0);
+      }
+
+      20%, 80% {
+        transform: translate3d(4px, 0, 0);
+      }
+
+      30%, 50%, 70% {
+        transform: translate3d(-8px, 0, 0);
+      }
+
+      40%, 60% {
+        transform: translate3d(8px, 0, 0);
+      }
+    }
+  </style>
+  <script src='big.js'></script>
+  <script src='highlight.js'></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class='dark'>
+  <div>Hyper<em>DB</em></div>
+  <div>a scalable <em>distributed</em> database</div>
+  <div>@<em>mafintosh</em></div>
+  <div>
+    <pre class="fonts">👨 ➡️ 🖥️</pre>
+  </div>
+  <div>
+    <pre class="fonts">👨 ↩️ 🖥️</pre>
+  </div>
+  <div>
+    <pre class="fonts">👩 ↩️ 
+👨 ↩️ 🖥️ 
+👩 ↩️ </pre>
+  </div>
+  <div>
+    <pre class="fonts">👩 ↩️ 
+👩 ↩️ 
+👨 ↩️ <span>🖥️</span> 
+👩 ↩️ 
+👨 ↩️ </pre>
+  </div>
+  <div>
+    <pre class="fonts">👩 ↩️ 
+👩 ↩️ 
+👨 ↩️ <span class="face">🖥️</span> 
+👩 ↩️ 
+👨 ↩️ </pre>
+  </div>
+  <div>
+    <pre class="fonts">👩 ↩️ 
+👩 ↩️ 
+👨 ↩️ 💀 
+👩 ↩️ 
+👨 ↩️ </pre>
+  </div>
+  <div> 
+    <em>Solution:</em> <span>Use more than one server</span>
+  </div>
+  <div>
+    <pre class="fonts">👩 ↩️ 
+👩 ↩️ 
+👨 ↩️ 🖥️+🖥️+🖥️ 
+👩 ↩️ 
+👨 ↩️ </pre>
+  </div>
+  <div>
+    Each <em>server</em> is a clone of the other ones
+  </div>
+  <div>
+    I.e. they all contain the <em>same data</em>
+  </div>
+  <div>
+    <em>Problem:</em> What happens when new data is written?
+  </div>
+  <div>
+    <pre class="fonts">👨 key=<em>foo</em> ➡️ 🖥️
+             🖥️</pre>
+  </div>
+  <div>
+    <pre class="fonts">👨 key=<em>foo</em> ➡️ 🖥️
+👩 key=<em>bar</em> ➡️ 🖥️</pre>
+  </div>
+  <div>
+    <pre class="fonts">👩 key=<em>foo</em> ↩️ 🖥️
+             🖥️</pre>
+  </div>
+  <div>
+    <pre class="fonts">           ↩️ 🖥️
+👩 key=<em>bar</em> ↩️ 🖥️</pre>
+  </div>
+  <div>
+    Inconsistency<em>!</em>
+  </div>
+  <div>
+    <em>Solution:</em> Pick a <em>leader</em> server, and always <em>write</em> to that one
+  </div>
+  <div>
+    You can keep <em>reading</em> from any other one
+  </div>
+  <div>
+    <pre class="fonts">🖥️
+🖥️</pre>
+  </div>
+  <div>
+    <pre class="fonts">🖥️🌟
+🖥️</pre>
+  </div>
+  <div>
+    <pre class="fonts">👨 key=<em>foo</em> ➡️ 🖥️🌟
+             🖥️</pre>
+  </div>
+  <div>
+    <pre class="fonts">👨 key=<em>foo</em> ➡️ 👍🌟
+             🖥️</pre>
+  </div>
+  </div>
+  <div>
+    <pre class="fonts">             🖥️🌟
+👩 key=<em>bar</em> ➡️ 🖥️ 
+</pre>
+  </div>
+  <div>
+    <pre class="fonts">             🖥️🌟
+👩 key=<em>bar</em> ➡️ 👎
+</pre>
+  </div>
+  <div>
+    <pre class="fonts">             🖥️🌟
+👩 key=<em>bar</em> ➡️ ⤴️
+</pre>
+  </div>
+  <div>
+    <pre class="fonts">             👍🌟
+👩 key=<em>bar</em> ➡️ ⤴️
+</pre>
+  </div>
+  <div>
+    <em>Leader</em> replicates changes out to all other clones
+  </div>
+  <div>
+    Since the <em>leader</em> gets all writes it knows which value is the <em>"latest"</em> one
+  </div>
+  <div>
+    <pre class="fonts">👩 key=<em>bar</em> ↩️ 🖥️
+             🖥️</pre>
+  </div>
+  <div>
+    <pre class="fonts">           ↩️ 🖥️
+👩 key=<em>bar</em> ↩️ 🖥️</pre>
+  </div>
+  <div>
+    Consistency<em>!</em>
+  </div>
+  <div>
+    Leader election can be done using <em>raft</em> or <em>paxos</em>
+  </div>
+  <div>
+    <em>LOTS</em> of databases rely on leader election
+  </div>
+  <div>
+    mySQL, Postgres, MongoDB, ...
+  </div>
+  <div>
+    Leader election scales well in a <em>data center</em>
+  </div>
+  <div>
+    Leader is <em>~always</em> online and you have <em>~low</em> latency
+  </div>
+  <div>
+    And you trust the computers in the data center to do the <em>right</em> thing
+  </div>
+  <div>
+    If you want to write a <em>P2P database</em> for the web it has issues
+  </div>
+  <div>
+    The web has high <em>latency</em>, unpredictable <em>topologies</em>, no <em>implied</em> trust
+  </div>
+  <div>
+    Append only logs<em>!</em>
+  </div>
+  <div>
+    Using <em>append only logs</em> we can design a database where multiple servers can write <em>at the same time</em>
+  </div>
+  <div>
+    <pre class="fonts-sm">🖥️
+
+
+
+
+</pre>
+  </div>
+  <div>
+    <pre class="fonts-sm">🖥️
+<em>#0</em>: key=value
+
+
+
+</pre>
+  </div>
+
+  <div>
+    <pre class="fonts-sm">🖥️
+<em>#0</em>: key=value
+
+
+<em>db.key=</em>value
+</pre>
+  </div>
+
+  <div>
+    <pre class="fonts-sm">🖥️
+<em>#0</em>: key=value
+<em>#1</em>: key=other-value
+
+<em>db.key=</em>other-value
+</pre>
+  </div>
+  <div>
+    <pre class="fonts-sm">🖥️
+<em>#0</em>: key=value
+<em>#1</em>: key=other-value
+<em>#2</em>: key=other-other-value
+<em>db.key=</em>other-other-value
+</pre>
+  </div>
+
+  <div>
+    <pre>npm install <em>hypercore</em></pre>
+    <i style="white-space: nowrap; color: transparent;">a secure, p2p, append-only log</i>
+  </div>
+
+  <div>
+    <pre>npm install <em>hypercore</em></pre>
+    <i style="white-space: nowrap">a secure, p2p, append-only log</i>
+  </div>
+
+  <div>
+    Using <em>one log per server</em> we can order events <em>locally</em>
+  </div>
+
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+    
+  
+
+<em>db.key=</em>(null)</pre>
+  </div>
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+<em>#0</em>: key=foo 
+
+
+<em>db.key=</em>foo</pre>
+  </div>
+
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+<em>#0</em>: key=foo 
+<i style="color: gray">(the servers synchronize)</i>
+
+<em>db.key=</em>foo</pre>
+  </div>
+
+
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+<em>#0</em>: key=foo 
+             <em>#0</em>: key=bar
+
+<em>db.key=</em>bar</pre>
+  </div>
+
+  <div>
+    What happens if two servers <em>write at the same time</em>?
+  </div>
+
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+    
+  
+
+<em>db.key=</em>(null)</pre>
+  </div>
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+<em>#0</em>: key=foo 
+
+
+<em>db.key=</em>foo</pre>
+  </div>
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+<em>#0</em>: key=foo  <em>#0</em>: key=bar
+
+
+<em>db.key=</em>[foo, bar]</pre>
+  </div>
+
+  <div>
+    Returns both <em>foo</em> and <em>bar</em> to the user.
+  </div>
+
+  <div>
+    User picks the <em>"right"</em> one
+  </div>
+
+  <div>
+    User can <em>merge</em> by doing a new write
+  </div>
+
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+<em>#0</em>: key=foo  <em>#0</em>: key=bar
+
+
+<em>db.key=</em>[foo, bar]</pre>
+  </div>
+
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+<em>#0</em>: key=foo  <em>#0</em>: key=bar
+<i style="color: gray">(the servers synchronize)</i>
+
+<em>db.key=</em>[foo, bar]</pre>
+  </div>
+
+
+  <div>
+    <pre class="fonts-sm">🖥️           🖥️
+<em>#0</em>: key=foo  <em>#0</em>: key=bar
+<em>#1</em>: key=baz
+
+<em>db.key=</em>baz</pre>
+  </div>
+
+  <div>
+    <pre>npm install <em>hyperdb</em></pre>
+  </div>
+
+  <div>
+    <em>(</em>demo<em>)</em>
+  </div>
+
+  <div>
+    Thank you!
+
+    <a href="https://github.com/mafintosh">https://github.com/mafintosh</a>
+    <a href="https://patreon.com/mafintosh">https://patreon.com/mafintosh</a>
+  </div>
+</body>
+</html>
