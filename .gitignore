@@ -1,2 +1,5 @@
 db
 peer-*
+node_modules
+hyperdb/
+hyperdb.bak/

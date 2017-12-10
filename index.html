@@ -365,6 +365,119 @@
   </div>
 
   <div>
+    How it <em>works</em>
+  </div>
+
+  <div>
+    The only storage we have is an <em>append-only log</em>...
+  </div>
+
+  <div>
+    So all keys are <em>incrementing</em> numbers...
+  </div>
+
+  <div>
+    We want to use <em>string</em> keys
+  </div>
+
+  <div>
+    <em>Solution:</em> Hash array mapped tries
+  </div>
+
+  <div>
+    Hash the key using a <em>fast hash</em> function
+  </div>
+
+  <div>
+    <pre>siphash(<em>key</em>) ➡️ 0xdeadbeef</pre>
+  </div>
+
+  <div>
+    Convert the hash to a <em>lower</em> base (we use 4)
+  </div>
+
+  <div>
+    <pre>siphash(<em>key</em>) ➡️  031312320...</pre>
+  </div>
+
+  <div>
+    Find the <em>latest</em> values in the append-only log that <em>shares</em> a prefix of the hash
+  </div>
+
+  <div>
+    <pre>siphash(<em>key</em>) ➡️  031312320...
+
+
+
+</pre>    
+  </div>
+
+  <div>
+    <pre>siphash(<em>key</em>) ➡️  <em>0</em>31312320...
+nodes1 = shares_prefix(<em>0</em>)
+
+
+</pre>    
+  </div>
+
+<div>
+    <pre>siphash(<em>key</em>) ➡️  <em>03</em>1312320...
+nodes1 = shares_prefix(0)
+nodes2 = shares_prefix(<em>03</em>)
+
+</pre>    
+  </div>
+
+<div>
+    <pre>siphash(<em>key</em>) ➡️  <em>031</em>312320...
+nodes1 = shares_prefix(0)
+nodes2 = shares_prefix(03)
+nodes3 = shares_prefix(<em>031</em>)
+</pre>    
+  </div>
+
+  <div>
+    Remove <em>duplicates</em>
+  </div>
+
+  <div>
+    For each <em>remaining</em> node, store the <em>log sequence number</em> and how much of the <em>prefix</em> it shares
+  </div>
+  
+  <div>
+    We call these nodes <em>links</em>.
+  </div>
+
+  <div>
+    To <em>lookup</em> a key:
+  </div>
+
+  <div>
+    <pre>0. hash = siphash(<em>lookup-key</em>)
+
+1. Get <em>latest node</em> in the append-only log.
+
+2. Check if <em>node.key === key</em>. If so we are done.
+
+3. Look at the nodes it links,
+   and pick the one with the <em>longest shared hash prefix</em>
+
+4. If <em>no shared prefix</em>, the key does not exist.
+
+5. Else, get the node from the log and <em>go to 2</em>.
+</pre>
+  </div>
+
+  <div>
+    (<em>demo</em>)
+  </div>
+
+  <div>
+    <em>TL;DR</em> Store a little bit of information and lookup
+    any key in <em>log(n)</em> disk round trips
+  </div>
+
+  <div>
     Thank you!
 
     <a href="https://github.com/mafintosh">https://github.com/mafintosh</a>
